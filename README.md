@@ -4,7 +4,7 @@ A web application that displays Reboot01 user data from a GraphQL API, including
 
 ## Features
 
-- **User Login**: Secure authentication with username/password
+- **User Login**: Secure authentication with (username or email)/password
 - **Profile Page**: Displays personal information (name, email, campus, etc.)
 - **XP Tracking**: Shows XP progression with interactive graphs
 - **Skills Radar Chart**: Visualizes different skill levels
@@ -13,7 +13,7 @@ A web application that displays Reboot01 user data from a GraphQL API, including
 
 ## How to Use
 
-1. Visit the [live demo](https://your-username.github.io/your-repo-name) (replace with your GitHub Pages URL)
+1. Visit the [live demo](https://husain-alabbad.github.io/Reboot01-Dashboard/)
 2. Log in with your credentials
 3. View your profile data, XP progress, and skills
 
