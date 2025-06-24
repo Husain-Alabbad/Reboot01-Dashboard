@@ -2,39 +2,32 @@ import { setHeader } from "./script.js";
 import { login, showAlert } from "./login.js";
 
 export const profile = (data) => {
-    let userID = data.data.user[0].id;
-    let username = data.data.user[0].login;
-    let campus = data.data.user[0].campus;
-    let phone = data.data.user[0].attrs.PhoneNumber;
-    let email = data.data.user[0].attrs.email;
-    let dob = new Date(data.data.user[0].attrs.dateOfBirth).toLocaleDateString('en-US', {
+    const user = data.data.user[0];
+    
+    // Update data access patterns
+    let userID = user.id;
+    let username = user.login;
+    let campus = user.campus;
+    let phone = user.phoneNumber;
+    let email = user.email;
+    let dob = new Date(user.dateOfBirth).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
     });
-    let gender = data.data.user[0].attrs.genders;
-    let firstname = data.data.user[0].attrs.firstName;
-    let lastname = data.data.user[0].attrs.lastName;
-    let xpData = data.data.user[0].xpHistory; 
-    let downData = data.data.user[0].downTransactions;
-    let upData = data.data.user[0].upTransactions;
-    let totalXp = data.data.user[0].totalXP;
-    let level = data.data.user[0].events[0].level;
+    let gender = user.gender;
+    let firstname = user.firstName;
+    let lastname = user.lastName;
+    let xpData = user.xpHistory; 
+    let downData = user.downTransactions;
+    let upData = user.upTransactions;
+    let totalXp = user.totalXP;
+    let level = user.events[0]?.level || 0;
     const totalXPs = totalXp.reduce((totalXPs, transaction) => {
         return transaction.type === "xp" ? totalXPs + transaction.amount : totalXPs;
     }, 0);
 
-    let currentRank = data.data.event[0].object.attrs.ranksDefinitions;
-    let rank = currentRank
-        .filter(rank => rank.level <= level)
-        .sort((a, b) => b.level - a.level)[0];
-
-    let nextRank = currentRank
-        .filter(rank => rank.level > level)
-        .sort((a, b) => a.level - b.level)[0];
-
-    let pct = Math.round((level * 100) / nextRank.level);
-    let translate = pct - 100;
+    
     let skillData = data.data.user[0].skillTypes.nodes;
 
 
@@ -74,7 +67,7 @@ export const profile = (data) => {
     <span class="trophy-img">
                 <img src="./static/trophy_4898454.png" alt="Trophy Icon">
                 </span>
-    ${rank.name} Information
+    ${username} Information
 `;
 
     const logoutBtn = document.createElement('button');
@@ -221,7 +214,7 @@ export const profile = (data) => {
 
     let xp = document.createElement("div");
     xp.classList.add("xp-section");
-    xp.innerHTML = `
+   xp.innerHTML = `
         <!-- XP Cards and Audit Ratio -->
             <div class="card xp-card">
                 <div class="card-header">
@@ -244,12 +237,6 @@ export const profile = (data) => {
                             <p class="xp-value">${level}</p>
                         </div>
 
-                        <!-- Rank Card -->
-                        <div class="card-inner xp-item">
-                            <h3 class="xp-label accent-text">Rank</h3>
-                            <p class="xp-value">${rank.name}</p>
-                        </div>
-
                         <!-- Audit Ratio Pie Chart -->
                         <div class="card-inner audit-ratio", id="audit-ratio">
                             <h3 class="xp-label accent-text">Audit Ratio</h3>
@@ -257,19 +244,6 @@ export const profile = (data) => {
                                 <!-- Pie chart would go here -->
                             </div>
                         </div>
-                    </div>
-
-                    <div class="level-progress">
-                        <div class="level-labels">
-                            <span>${rank.name}</span>
-                            <span>${nextRank.name}</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-indicator"
-                                style="transform: translateX(${translate}%)">
-                            </div>
-                        </div>
-                        <div class="level-percent accent-text">${pct}% levels completed to next rank</div>
                     </div>
                 </div>
             </div>
@@ -288,8 +262,7 @@ export const profile = (data) => {
                     </div>
                 </div>
             </div>
-        </div>
-    `
+    `;
 
 
 

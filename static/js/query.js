@@ -8,18 +8,18 @@ export const getData = async () => {
 
   const query = `
   query {
-    event(where: { id: { _eq: 72 } }) {
-      object {
-        attrs
-      }
-    }
-
-    user {
+    user(limit: 1) {
       id
+      login
       profile
       campus
-      login
       attrs
+      firstName: attrs(path: "$.firstName")
+      lastName: attrs(path: "$.lastName")
+      email: attrs(path: "$.email")
+      phoneNumber: attrs(path: "$.PhoneNumber")
+      gender: attrs(path: "$.genders")
+      dateOfBirth: attrs(path: "$.dateOfBirth")
 
       results(order_by: { grade: desc }, limit: 5) {
         object {
@@ -32,14 +32,10 @@ export const getData = async () => {
         amount
       }
 
-      events(where: { eventId: { _eq: 72 } }) {
-        level
-      }
-
       xpHistory: transactions(
         where: { 
           _and: [
-            { eventId: { _eq: 72 } },
+            { event: { path: { _eq: "/bahrain/bh-module" } } },
             { type: { _eq: "xp" } }
           ]
         }
@@ -50,7 +46,7 @@ export const getData = async () => {
       }
 
       totalXP: transactions(
-        where: { eventId: { _eq: 72 } },
+        where: { event: { path: { _eq: "/bahrain/bh-module" } } }
         order_by: { createdAt: asc }
       ) {
         object {
@@ -60,7 +56,6 @@ export const getData = async () => {
         }
         amount
         createdAt
-        eventId
         path
         type
       }
@@ -91,13 +86,13 @@ export const getData = async () => {
           amount
         }
       }
+
+      events(where: { event: { path: { _eq: "/bahrain/bh-module" } } }) {
+        level
+      }
     }
   }
 `;
-
-
-
-
 
   try {
     let response = await fetch(endpoint, {
@@ -119,7 +114,4 @@ export const getData = async () => {
     login();
     showAlert(`Error: ${error}`);
   }
-
 }
-
-
