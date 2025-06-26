@@ -229,12 +229,14 @@ export const profile = (data) => {
                         <div class="card-inner xp-item">
                             <h3 class="xp-label accent-text">Total XP</h3>
                             <p class="xp-value">${xpsize(totalXPs)[0]} ${xpsize(totalXPs)[1]}</p>
+                             <img src="./static/skill-development.png" class="troi" alt="Skill Icon">
                         </div>
 
                         <!-- Level Card -->
                         <div class="card-inner xp-item">
                             <h3 class="xp-label accent-text">Current Level</h3>
                             <p class="xp-value">${level}</p>
+                            <img src="./static/trophy_4898454.png" class="troi" alt="Trophy Icon">
                         </div>
 
                         <!-- Audit Ratio Pie Chart -->
@@ -457,14 +459,13 @@ const createAuditRatioChart = (upData, downData) => {
     const centerX = 100;
     const centerY = 100;
     const radius = 80;
-    const upColor = "#C4B5FD";
     const downColor = "#8B5CF6";
+    const upColor = "#C4B5FD";
+    
 
     // Calculate angles based on ratio
-    const total = auditRatio + 1;
-    const upAngle = (auditRatio / total) * 2 * Math.PI;
-    const downAngle = (1 / total) * 2 * Math.PI;
-
+    const upAngle = auditRatio * 2 * Math.PI;
+    const downAngle = 2 * Math.PI;
     // Draw Up slice
     const upPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
     upPath.setAttribute("d", describeArc(centerX, centerY, radius, 0, upAngle));
@@ -473,7 +474,7 @@ const createAuditRatioChart = (upData, downData) => {
 
     // Draw Down slice
     const downPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    downPath.setAttribute("d", describeArc(centerX, centerY, radius, upAngle, upAngle + downAngle));
+    downPath.setAttribute("d", describeArc(centerX, centerY, radius, upAngle, 2 * Math.PI));
     downPath.setAttribute("fill", downColor);
     svg.appendChild(downPath);
 
@@ -505,17 +506,17 @@ const createAuditRatioChart = (upData, downData) => {
 
     // Helper function to create arc path
     function describeArc(x, y, radius, startAngle, endAngle) {
-        const start = polarToCartesian(x, y, radius, endAngle);
-        const end = polarToCartesian(x, y, radius, startAngle);
-        const largeArcFlag = endAngle - startAngle <= Math.PI ? 0 : 1;
+    const start = polarToCartesian(x, y, radius, startAngle);  // Changed to startAngle
+    const end = polarToCartesian(x, y, radius, endAngle);      // Changed to endAngle
+    const largeArcFlag = endAngle - startAngle <= Math.PI ? 0 : 1;
 
-        return [
-            "M", x, y,
-            "L", start.x, start.y,
-            "A", radius, radius, 0, largeArcFlag, 0, end.x, end.y,
-            "Z"
-        ].join(" ");
-    }
+    return [
+        "M", x, y,
+        "L", start.x, start.y,
+        "A", radius, radius, 0, largeArcFlag, 1, end.x, end.y,  // Changed last 0 to 1
+        "Z"
+    ].join(" ");
+}
 
     // Helper function for coordinates conversion
     function polarToCartesian(centerX, centerY, radius, angle) {

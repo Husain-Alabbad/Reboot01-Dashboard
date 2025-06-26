@@ -411,3 +411,9 @@ img, svg, canvas {
     height: 50%;
 }
 
+.troi{
+    width: 50%;
+    height: 50%;
+    display: block;
+    margin: 10% auto;
+}
